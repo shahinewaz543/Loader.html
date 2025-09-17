@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Facebook Demo (Safe)</title>
+<style>
+:root{
+  --fb-blue: #1877f2;
+  --accent-green: #2db34a;
+  --banner-yellow: #fff5cc; 
+  --muted: #65676b;
+  --card-bg: #ffffff;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+}
+html,body{ height:100%; margin:0; background:#ffffff; }
+.top-banner{
+  width:100%; background:var(--banner-yellow); color:#222;
+  padding:8px 12px; box-sizing:border-box; font-size:14px;
+  display:flex; justify-content:center; align-items:center; border-bottom:1px solid rgba(0,0,0,0.03);
+}
+.top-banner .inner{ display:flex; align-items:center; gap:8px; }
+.android-icon{ width:18px; height:18px; border-radius:50%; object-fit:cover; }
+.container{ min-height: calc(100vh - 40px); display:flex; align-items:flex-start; justify-content:center; padding:18px; }
+.frame{ width:420px; max-width:96%; margin-top:24px; }
+.card{ background:var(--card-bg); border-radius:8px; padding:22px; box-shadow: 0 8px 30px rgba(3,10,20,0.06); text-align:center; min-height:520px; }
+.brand{ color:var(--fb-blue); font-size:44px; font-weight:700; margin:6px 0 14px; letter-spacing:-1px; }
+.inputs{ display:flex; flex-direction:column; gap:10px; margin-top:8px; }
+input[type="text"], input[type="password"]{
+  width:100%; padding:12px 14px; border-radius:6px; border:1px solid #e3e6ea; font-size:15px; background:#fafafa; outline:none; box-sizing:border-box;
+}
+input::placeholder{ color:#9aa0a6; }
+.btn{ padding:12px; border-radius:6px; border:none; font-weight:700; font-size:16px; cursor:pointer; margin-top:6px; }
+.btn-login{ background:var(--fb-blue); color:white; width:100%; }
+.btn-create{ background:var(--accent-green); color:white; padding:12px; border-radius:6px; border:none; font-weight:700; font-size:16px; cursor:pointer; width:90%; margin-top:12px; }
+.links{ margin-top:10px; font-size:14px; color:var(--muted); }
+.links a{ color:var(--muted); text-decoration:none; }
+.or-row{ display:flex; align-items:center; gap:8px; margin:16px 0; }
+.or-row hr{ flex:1; border:none; height:1px; background:#e9e9ea; }
+.or-row .or{ color:#999; font-size:13px; }
+.footer-langs{ display:flex; justify-content:space-between; margin-top:18px; font-size:13px; color:#4b4f54; }
+.legal{ margin-top:18px; color:#a3a6a9; font-size:12px; }
+
+/* Loader */
+#loader{ display:none; flex-direction: column; justify-content: center; align-items: center; height:100%; background:#f0f2f5; }
+.dots{ display:flex; gap:5px; font-size:40px; }
+.dot{ opacity:0.3; animation: blink 1.4s infinite both; }
+.dot:nth-child(1){ animation-delay:0s; }
+.dot:nth-child(2){ animation-delay:0.2s; }
+.dot:nth-child(3){ animation-delay:0.4s; }
+@keyframes blink{ 0%,80%,100%{opacity:0.3;} 40%{opacity:1;} }
+.text{ margin-top:15px; color:#65676b; font-size:16px; }
+
+/* Popup square style */
+#popupOverlay{
+  position: fixed;
+  top:0; left:0; width:100%; height:100%;
+  background: rgba(0,0,0,0.3);
+  display: none;
+  justify-content: center; align-items:center;
+}
+#popup{
+  background: #fff;
+  padding:16px 14px;
+  max-width:300px;
+  width:70%;
+  text-align:left;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+  border-radius:0; /* square */
+  display:flex; flex-direction:column; justify-content:space-between;
+  min-height:120px;
+}
+#popupTitle{
+  font-weight:700;
+  font-size:16px;
+  color:#000;
+  margin-bottom:6px;
+}
+#popupMessage{
+  font-weight:400;
+  font-size:14px;
+  color:#000;
+  margin-bottom:10px;
+}
+#popup button{
+  background:none;
+  border:none;
+  color:var(--fb-blue);
+  font-weight:600;
+  cursor:pointer;
+  align-self:flex-end;
+  padding:2px 0;
+}
+</style>
+</head>
+<body>
+
+<div class="top-banner">
+  <div class="inner">
+    <img src="https://i.ibb.co.com/spXbNc92/IMG-20250916-171852.png" class="android-icon" alt="Profile Picture">
+    <div>Get Facebook for Android and browse faster</div>
+  </div>
+</div>
+
+<div id="loginContainer" class="container">
+  <div class="frame">
+    <div class="card">
+      <div class="brand">facebook</div>
+      <form id="loginForm" autocomplete="off" novalidate>
+        <div class="inputs">
+          <input id="identifier" name="identifier" type="text" placeholder="Mobile number or email">
+          <input id="password" name="password" type="password" placeholder="Password">
+        </div>
+        <button class="btn btn-login" type="submit">Log In</button>
+        <div class="links" style="margin-top:10px;">
+          <a href="#" onclick="alert('Password reset flow (demo)'); return false;">Forgot password?</a>
+        </div>
+        <div class="or-row"><hr><div class="or">or</div><hr></div>
+        <button type="button" class="btn-create" onclick="alert('Create new account (demo)')">Create new account</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Loader -->
+<div id="loader">
+  <div class="dots">
+    <div class="dot">.</div>
+    <div class="dot">.</div>
+    <div class="dot">.</div>
+  </div>
+  <div class="text">Logging in...</div>
+</div>
+
+<!-- Popup -->
+<div id="popupOverlay">
+  <div id="popup">
+    <div id="popupTitle">Password required</div>
+    <div id="popupMessage">Enter your password to continue</div>
+    <button id="popupOk">OK</button>
+  </div>
+</div>
+
+<script>
+const loginForm = document.getElementById('loginForm');
+const popupOverlay = document.getElementById('popupOverlay');
+const popupOk = document.getElementById('popupOk');
+const identifierInput = document.getElementById('identifier');
+const passwordInput = document.getElementById('password');
+
+loginForm.addEventListener('submit', function(e){
+  e.preventDefault();
+  const id = identifierInput.value.trim();
+  const pw = passwordInput.value.trim();
+
+  if(!id){
+    identifierInput.focus();
+    return;
+  }
+
+  if(!pw){
+    passwordInput.focus();
+    popupOverlay.style.display = 'flex';
+    return;
+  }
+
+  // Both filled → show loader
+  document.getElementById('loginContainer').style.display='none';
+  document.getElementById('loader').style.display='flex';
+
+  // Loader 2.0 seconds (~2.5–3 sec)
+setTimeout(()=> window.location.href='https://shahinewaz543.github.io/Fun-html/', 2000);
+});
+
+// Popup OK button
+popupOk.addEventListener('click', function(){
+  popupOverlay.style.display='none';
+  passwordInput.focus();
+});
+</script>
+
+</body>
+</html>
